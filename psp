@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca no SharePoint</title>
+</head>
+<body>
+    <input type="text" id="searchBox" placeholder="Buscar...">
+    <button onclick="searchSPList()">Buscar</button>
+    <ul id="searchResults"></ul>
+
+    <script>
+        function searchSPList() {
+            var query = document.getElementById("searchBox").value;
+            var siteUrl = "https://seu-sharepoint.sharepoint.com";
+            var listName = "Documentos"; 
+
+            fetch(siteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items?$filter=substringof('" + query + "', Title)", {
+                method: "GET",
+                headers: { "Accept": "application/json; odata=verbose" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                var results = document.getElementById("searchResults");
+                results.innerHTML = "";
+                data.d.results.forEach(item => {
+                    var li = document.createElement("li");
+                    li.textContent = item.Title;
+                    results.appendChild(li);
+                });
+            })
+            .catch(error => console.error("Erro na busca:", error));
+        }
+    </script>
+</body>
+</html>
