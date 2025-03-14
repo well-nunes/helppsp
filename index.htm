@@ -2,28 +2,66 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Busca no Iframe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca Personalizada</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #searchInput {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+        #searchButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
         .highlight {
             background-color: yellow;
+        }
+        #content {
+            margin-top: 20px;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
+    <h1>Busca no Conteúdo</h1>
     <input type="text" id="searchInput" placeholder="Digite o texto para buscar">
-    <button onclick="searchInIframe()">Buscar</button>
+    <button id="searchButton" onclick="searchInIframe()">Buscar</button>
 
     <div id="content">
         <p>Este é um exemplo de texto dentro do iframe.</p>
         <p>Outro parágrafo com mais texto para testar a busca.</p>
+        <p>Você pode adicionar mais conteúdo aqui para testar a funcionalidade de busca.</p>
     </div>
 
     <script>
         function searchInIframe() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             const content = document.getElementById('content').innerHTML;
-            const highlightedContent = content.replace(new RegExp(query, 'gi'), match => `<span class="highlight">${match}</span>`);
-            document.getElementById('content').innerHTML = highlightedContent;
+            if (query === "") {
+                alert("Por favor, digite um termo para buscar.");
+                return;
+            }
+
+            // Remove highlights anteriores
+            const highlightedContent = content.replace(/<span class="highlight">|<\/span>/gi, '');
+
+            // Aplica o highlight ao novo termo
+            const newContent = highlightedContent.replace(new RegExp(query, 'gi'), match => `<span class="highlight">${match}</span>`);
+            document.getElementById('content').innerHTML = newContent;
+
+            // Rola a página para o primeiro resultado
+            const firstHighlight = document.querySelector('.highlight');
+            if (firstHighlight) {
+                firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                alert("Texto não encontrado!");
+            }
         }
     </script>
 </body>
