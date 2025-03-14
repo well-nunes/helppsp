@@ -18,7 +18,14 @@
     }
     .searchable {
       margin-bottom: 10px;
-      display: block; /* Inicialmente, todos os parágrafos são exibidos */
+      display: block; /* Todos os parágrafos são visíveis inicialmente */
     }
   </style>
-<
+</head>
+<body>
+  <h1>Busca na Página</h1>
+  <input type="text" id="searchInput" placeholder="Digite o termo para buscar..." onkeyup="searchContent()">
+  
+  <div id="content">
+    <p class="searchable">Este é um exemplo de conteúdo que pode ser pesquisado. Tente encontrar palavras-chave aqui.</p>
+    <p class="searchable">Aqui est
