@@ -4,15 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pesquisador de Conteúdo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #0066cc;
+      --primary-hover: #0052a3;
       --background: #ffffff;
-      --foreground: #0f172a;
-      --accent: #0066cc;
-      --error: #ef4444;
-      --transition: all 0.2s ease;
+      --foreground: #333333;
+      --border: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --highlight-bg: #e6f0ff;
+      --highlight-color: #0066cc;
     }
     
     * {
@@ -22,16 +24,16 @@
     }
     
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
       color: var(--foreground);
       background: var(--background);
-      line-height: 1.5;
+      line-height: 1.6;
       font-size: 16px;
+      padding: 1rem;
     }
     
     .container {
       max-width: 800px;
-      padding: 1rem;
       margin: 0 auto;
     }
     
@@ -42,30 +44,35 @@
       color: var(--primary);
     }
     
-    p {
+    .intro-text {
       font-size: 0.875rem;
-      color: #64748b;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+    
+    .search-wrapper {
+      display: flex;
+      gap: 0.5rem;
       margin-bottom: 1rem;
     }
     
     .search-container {
-      margin-bottom: 1rem;
       position: relative;
+      flex-grow: 1;
     }
     
     .search-input {
       width: 100%;
-      padding: 0.75rem 2.5rem;
-      font-size: 0.875rem;
-      line-height: 1.5;
-      border: 1px solid #e2e8f0;
-      border-radius: 0.375rem;
+      padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
       outline: none;
-      transition: var(--transition);
+      transition: all 0.2s ease;
     }
     
     .search-input:focus {
-      border-color: var(--accent);
+      border-color: var(--primary);
       box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
     }
     
@@ -94,10 +101,95 @@
       color: #64748b;
     }
     
-    .search-status {
+    .search-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0 1.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    
+    .search-button:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .textarea-container {
+      margin-bottom: 1.5rem;
+    }
+    
+    .textarea-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
       font-size: 0.875rem;
-      margin-top: 0.5rem;
-      color: #64748b;
+    }
+    
+    .content-textarea {
+      width: 100%;
+      height: 200px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      resize: vertical;
+    }
+    
+    .content-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+    }
+    
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+    
+    .results-container {
+      margin-top: 1.5rem;
+    }
+    
+    .result-card {
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+      background-color: #f8fafc;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    
+    .result-card:hover {
+      border-color: var(--border-hover);
+    }
+    
+    .highlight {
+      background-color: var(--highlight-bg);
+      color: var(--highlight-color);
+      padding: 0 2px;
+      border-radius: 2px;
+      font-weight: 500;
+    }
+    
+    .no-results {
+      padding: 2rem;
+      text-align: center;
+      color: #666;
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+    }
+    
+    .help-text {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 0.25rem;
     }
     
     .spinner {
@@ -106,7 +198,7 @@
       height: 1rem;
       border: 2px solid rgba(0, 102, 204, 0.3);
       border-radius: 50%;
-      border-top-color: var(--accent);
+      border-top-color: var(--primary);
       animation: spin 1s ease-in-out infinite;
       margin-right: 0.5rem;
       vertical-align: middle;
@@ -116,118 +208,11 @@
       to { transform: rotate(360deg); }
     }
     
-    .results-container {
-      margin-top: 1rem;
-    }
-    
-    .result-card {
-      padding: 1rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 0.375rem;
-      margin-bottom: 0.5rem;
-      background-color: #f8fafc;
-      font-size: 0.875rem;
-      color: #334155;
-      transition: var(--transition);
-    }
-    
-    .result-card:hover {
-      border-color: #cbd5e1;
-    }
-    
-    .highlight {
-      background-color: rgba(0, 102, 204, 0.1);
-      color: var(--accent);
-      padding: 0 0.25rem;
-      border-radius: 0.125rem;
-      font-weight: 500;
-    }
-    
-    .error-card {
-      padding: 1rem;
-      border: 1px solid #fecaca;
-      border-radius: 0.375rem;
-      background-color: #fef2f2;
-      color: #b91c1c;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .error-icon {
-      color: var(--error);
-    }
-    
-    .no-results {
-      padding: 2rem 1rem;
+    .footer {
+      margin-top: 2rem;
       text-align: center;
-      border: 1px solid #e2e8f0;
-      border-radius: 0.375rem;
-      background-color: #f8fafc;
-      color: #64748b;
-    }
-
-    .textarea-container {
-      margin-top: 1rem;
-      display: none;
-    }
-
-    .content-textarea {
-      width: 100%;
-      height: 150px;
-      padding: 0.75rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-      resize: vertical;
-    }
-
-    .textarea-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    .textarea-help {
       font-size: 0.75rem;
-      color: #64748b;
-      margin-top: 0.25rem;
-    }
-    
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0.375rem;
-      font-weight: 500;
-      font-size: 0.875rem;
-      padding: 0.5rem 1rem;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    
-    .button:hover {
-      background-color: #0052a3;
-    }
-    
-    .button:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.4);
-    }
-
-    .manual-mode-toggle {
-      margin-top: 1rem;
-      font-size: 0.875rem;
-      color: var(--primary);
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-decoration: underline;
-      padding: 0;
+      color: #666;
     }
   </style>
 </head>
@@ -235,51 +220,61 @@
   <div class="container">
     <header>
       <h1>Pesquisador de Conteúdo</h1>
-      <p>Pesquise qualquer conteúdo desta página do SharePoint</p>
-      
-      <div class="search-container">
-        <input 
-          type="text" 
-          id="searchInput" 
-          class="search-input" 
-          placeholder="Digite sua pesquisa aqui..."
-          autocomplete="off"
-        >
-        <div class="search-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-        <button id="clearButton" class="clear-button" aria-label="Limpar pesquisa">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      
-      <div id="searchStatus" class="search-status" style="display: none;"></div>
-      
-      <button id="manualModeButton" class="manual-mode-toggle">
-        Alternar para modo manual (copie e cole o conteúdo)
-      </button>
-      
-      <div id="textareaContainer" class="textarea-container">
-        <label for="contentTextarea" class="textarea-label">Conteúdo da página:</label>
+      <p class="intro-text">Cole qualquer texto abaixo e encontre o que procura rapidamente.</p>
+    </header>
+    
+    <main>
+      <div class="textarea-container">
+        <label for="contentTextarea" class="textarea-label">Conteúdo para pesquisar:</label>
         <textarea 
           id="contentTextarea" 
           class="content-textarea" 
           placeholder="Cole aqui o conteúdo da página que deseja pesquisar..."
         ></textarea>
-        <p class="textarea-help">
-          Dica: Selecione todo o conteúdo da sua página (Ctrl+A), copie (Ctrl+C) e cole aqui (Ctrl+V).
+        <p class="help-text">
+          Dica: Para obter o conteúdo da página, selecione todo o texto (Ctrl+A), copie (Ctrl+C) e cole aqui (Ctrl+V).
         </p>
-        <button id="useContentButton" class="button">Usar este conteúdo</button>
       </div>
-    </header>
+      
+      <div class="search-wrapper">
+        <div class="search-container">
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Digite sua pesquisa aqui..." 
+            autocomplete="off"
+          >
+          <div class="search-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <button id="clearButton" class="clear-button" aria-label="Limpar pesquisa">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        <button id="searchButton" class="search-button">
+          Pesquisar
+        </button>
+      </div>
+      
+      <div id="statusBar" class="status-bar" style="display: none;">
+        <div id="searchStatus"></div>
+        <div id="resultsCount"></div>
+      </div>
+      
+      <div id="resultsContainer" class="results-container"></div>
+    </main>
     
-    <div id="resultsContainer" class="results-container"></div>
+    <footer class="footer">
+      Ferramenta de pesquisa para SharePoint - Desenvolvida para acesso sem privilégios administrativos
+    </footer>
   </div>
-
+  
   <script>
     // Utility functions
     function escapeRegExp(string) {
@@ -298,7 +293,7 @@
         return [];
       }
       
-      // Create a regex that matches the search term and surrounding words
+      // Create a regex that matches the search term
       const searchTermRegex = new RegExp(
         `(\\S*${escapeRegExp(searchTerm)}\\S*|${escapeRegExp(searchTerm)})`, 
         'gi'
@@ -320,8 +315,8 @@
       
       matchPositions.forEach(position => {
         // Create a context window of text around the match
-        const startPosition = Math.max(0, position - 40);
-        const endPosition = Math.min(content.length, position + 80);
+        const startPosition = Math.max(0, position - 50);
+        const endPosition = Math.min(content.length, position + 100);
         let contextText = content.substring(startPosition, endPosition);
         
         // Add ellipsis if the context is truncated
@@ -329,7 +324,7 @@
         if (endPosition < content.length) contextText = contextText + '...';
         
         // Add to results if not a duplicate (avoid nearby matches showing duplicate context)
-        if (!matches.some(m => Math.abs(m.position - position) < 50)) {
+        if (!matches.some(m => Math.abs(m.position - position) < 60)) {
           matches.push({
             text: contextText,
             position: position
@@ -342,238 +337,104 @@
 
     // DOM elements
     const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
     const clearButton = document.getElementById('clearButton');
-    const searchStatus = document.getElementById('searchStatus');
-    const resultsContainer = document.getElementById('resultsContainer');
-    const manualModeButton = document.getElementById('manualModeButton');
-    const textareaContainer = document.getElementById('textareaContainer');
     const contentTextarea = document.getElementById('contentTextarea');
-    const useContentButton = document.getElementById('useContentButton');
+    const statusBar = document.getElementById('statusBar');
+    const searchStatus = document.getElementById('searchStatus');
+    const resultsCount = document.getElementById('resultsCount');
+    const resultsContainer = document.getElementById('resultsContainer');
     
     // State variables
-    let searchTimeout = null;
-    let pageContent = null;
     let isSearching = false;
-    let isManualMode = false;
     
     // Event listeners
     searchInput.addEventListener('input', function() {
       const value = this.value;
-      
-      // Show/hide clear button
       clearButton.style.display = value ? 'block' : 'none';
-      
-      // Debounce search
-      if (searchTimeout) {
-        clearTimeout(searchTimeout);
-      }
-      
-      searchTimeout = setTimeout(() => {
-        doSearch(value);
-      }, 300);
     });
     
     clearButton.addEventListener('click', function() {
       searchInput.value = '';
       clearButton.style.display = 'none';
-      resultsContainer.innerHTML = '';
-      searchStatus.style.display = 'none';
-      
-      // Focus back on input
       searchInput.focus();
     });
     
-    manualModeButton.addEventListener('click', function() {
-      isManualMode = !isManualMode;
-      textareaContainer.style.display = isManualMode ? 'block' : 'none';
-      this.textContent = isManualMode 
-        ? 'Voltar ao modo automático' 
-        : 'Alternar para modo manual (copie e cole o conteúdo)';
-        
-      if (isManualMode) {
-        contentTextarea.focus();
-      } else {
-        searchInput.focus();
-      }
+    searchButton.addEventListener('click', function() {
+      doSearch();
     });
     
-    useContentButton.addEventListener('click', function() {
-      const content = contentTextarea.value.trim();
-      if (content) {
-        pageContent = content;
-        searchStatus.innerHTML = 'Conteúdo atualizado com sucesso!';
-        searchStatus.style.display = 'block';
-        
-        // Auto search if there's already a term
-        const currentSearchTerm = searchInput.value.trim();
-        if (currentSearchTerm) {
-          doSearch(currentSearchTerm);
-        }
-        
-        // Hide after 2 seconds
-        setTimeout(() => {
-          if (!isSearching) {
-            searchStatus.style.display = 'none';
-          }
-        }, 2000);
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        doSearch();
       }
     });
     
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
-      // Focus search input on load
-      searchInput.focus();
-      
-      // Try multiple methods to get content from SharePoint parent window
-      let contentFound = false;
-      
-      // Method 1: Try direct access
-      try {
-        if (window !== window.parent && window.parent.document) {
-          pageContent = window.parent.document.body.textContent || '';
-          console.log('Method 1: Successfully accessed parent frame content');
-          contentFound = true;
-        }
-      } catch (error) {
-        console.log('Method 1: Unable to access parent frame content due to same-origin policy');
-      }
-      
-      // Method 2: Use postMessage API
-      if (!contentFound) {
-        try {
-          window.parent.postMessage({ type: 'REQUEST_CONTENT' }, '*');
-          console.log('Method 2: Sent request for content via postMessage');
-        } catch (error) {
-          console.log('Method 2: Failed to send postMessage', error);
-        }
-      }
-      
-      // Method 3: Add script to parent via URL hash (advanced)
-      if (!contentFound) {
-        try {
-          // Create a unique message ID
-          const messageId = 'msg_' + Math.random().toString(36).substr(2, 9);
-          
-          // Create script to execute in parent
-          const scriptContent = `
-            try {
-              const content = document.body.textContent || '';
-              const iframe = document.querySelector('iframe[src*="${window.location.origin}"]');
-              if (iframe && iframe.contentWindow) {
-                iframe.contentWindow.postMessage({
-                  type: 'CONTENT_RESPONSE',
-                  messageId: '${messageId}',
-                  content: content
-                }, '*');
-              }
-            } catch(e) { console.error('SharePoint search helper error:', e); }
-          `;
-          
-          // Encode script for URL
-          const encodedScript = encodeURIComponent(scriptContent);
-          
-          // Set URL hash with the script (this will be visible in parent frame's iframe src)
-          // Parent page needs to have a script listener that executes scripts from hash
-          window.location.hash = `script=${encodedScript}`;
-          
-          console.log('Method: Added script to URL hash');
-        } catch (error) {
-          console.log('Method 3: Failed to add script to URL hash', error);
-        }
-      }
-      
-      // Listen for messages from parent frame
-      window.addEventListener('message', function(event) {
-        if (event.data && event.data.type === 'CONTENT_RESPONSE') {
-          pageContent = event.data.content;
-          contentFound = true;
-          console.log('Received content from parent frame via postMessage');
-        }
-      });
-      
-      // Fallback: Show manual mode if content likely not accessible
-      setTimeout(() => {
-        if (!pageContent) {
-          console.log('Automatic methods failed, showing manual mode...');
-          isManualMode = true;
-          textareaContainer.style.display = 'block';
-          manualModeButton.textContent = 'Voltar ao modo automático';
-          
-          // Add helper text to search status
-          searchStatus.innerHTML = 'Não foi possível acessar o conteúdo automaticamente. Por favor, use o modo manual.';
-          searchStatus.style.display = 'block';
-        }
-      }, 1500);
+      // Focus content textarea on load
+      contentTextarea.focus();
     });
     
     // Search function
-    function doSearch(term) {
-      if (!term.trim()) {
-        resultsContainer.innerHTML = '';
-        searchStatus.style.display = 'none';
+    function doSearch() {
+      const searchTerm = searchInput.value.trim();
+      const content = contentTextarea.value;
+      
+      if (!searchTerm) {
+        alert('Por favor, digite um termo para pesquisar.');
+        searchInput.focus();
         return;
       }
       
-      const contentToSearch = pageContent || '';
-      
-      if (!contentToSearch && !isManualMode) {
-        // Show manual mode if no content is available
-        isManualMode = true;
-        textareaContainer.style.display = 'block';
-        manualModeButton.textContent = 'Voltar ao modo automático';
-        
-        searchStatus.innerHTML = 'Não foi possível acessar o conteúdo automaticamente. Por favor, use o modo manual.';
-        searchStatus.style.display = 'block';
+      if (!content) {
+        alert('Por favor, cole o conteúdo da página para pesquisar.');
+        contentTextarea.focus();
         return;
       }
       
       // Show searching status
       isSearching = true;
       searchStatus.innerHTML = '<div class="spinner"></div> Pesquisando...';
-      searchStatus.style.display = 'block';
+      statusBar.style.display = 'flex';
+      resultsCount.innerHTML = '';
       
-      try {
-        // Perform search
-        const results = performSearch(contentToSearch, term);
-        
-        // Add slight delay for UX
-        setTimeout(() => {
-          isSearching = false;
+      // Simulate small delay for better UX
+      setTimeout(() => {
+        try {
+          // Perform search
+          const results = performSearch(content, searchTerm);
           
           // Update status
-          searchStatus.innerHTML = `${results.length} resultado${results.length !== 1 ? 's' : ''} encontrado${results.length !== 1 ? 's' : ''}`;
+          isSearching = false;
+          resultsCount.innerHTML = `${results.length} resultado${results.length !== 1 ? 's' : ''} encontrado${results.length !== 1 ? 's' : ''}`;
+          searchStatus.innerHTML = '';
           
           // Show results
           if (results.length === 0) {
             resultsContainer.innerHTML = `
               <div class="no-results">
-                Nenhum resultado encontrado para sua pesquisa.
+                Nenhum resultado encontrado para "${searchTerm}".
               </div>
             `;
           } else {
-            resultsContainer.innerHTML = results.map(result => `
+            resultsContainer.innerHTML = results.map((result, index) => `
               <div class="result-card">
-                ${highlightMatches(result.text, term)}
+                ${highlightMatches(result.text, searchTerm)}
               </div>
             `).join('');
           }
-        }, 300);
-      } catch (error) {
-        console.error('Search error:', error);
-        isSearching = false;
-        searchStatus.innerHTML = '';
-        
-        resultsContainer.innerHTML = `
-          <div class="error-card">
-            <div class="error-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
+        } catch (error) {
+          console.error('Search error:', error);
+          isSearching = false;
+          searchStatus.innerHTML = 'Erro na pesquisa';
+          resultsContainer.innerHTML = `
+            <div class="no-results">
+              Ocorreu um erro ao realizar a pesquisa. Por favor, tente novamente.
             </div>
-            <p>Ocorreu um erro ao realizar a pesquisa. Por favor, tente novamente.</p>
-          </div>
-        `;
-      }
+          `;
+        }
+      }, 300);
     }
   </script>
 </body>
