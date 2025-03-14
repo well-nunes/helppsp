@@ -1,55 +1,30 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busca Dinâmica no GitHub Pages</title>
+    <title>Busca no Iframe</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #searchInput {
-            padding: 10px;
-            font-size: 16px;
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 20px;
-        }
-        .searchable {
-            display: block;
-            margin-bottom: 10px;
+        .highlight {
+            background-color: yellow;
         }
     </style>
 </head>
 <body>
-
-    <h1>Busque Conteúdo na Página</h1>
-    <input type="text" id="searchInput" placeholder="Digite para buscar..." onkeyup="searchContent()">
+    <input type="text" id="searchInput" placeholder="Digite o texto para buscar">
+    <button onclick="searchInIframe()">Buscar</button>
 
     <div id="content">
-        <p class="searchable">Este é um exemplo de conteúdo para ser buscado. Teste palavras-chave como "conteúdo".</p>
-        <p class="searchable">Aqui outro texto de exemplo. Tente buscar por "exemplo".</p>
-        <p class="searchable">Digite "teste" para ver mais resultados.</p>
-        <p class="searchable">Este texto aparece se você digitar "conteúdo".</p>
+        <p>Este é um exemplo de texto dentro do iframe.</p>
+        <p>Outro parágrafo com mais texto para testar a busca.</p>
     </div>
 
     <script>
-        function searchContent() {
-            var input = document.getElementById("searchInput").value.toLowerCase(); // Obtém o valor da pesquisa
-            var paragraphs = document.getElementsByClassName("searchable");
-
-            // Itera por cada parágrafo e verifica se contém o termo de busca
-            for (var i = 0; i < paragraphs.length; i++) {
-                var paragraph = paragraphs[i];
-                if (paragraph.textContent.toLowerCase().includes(input)) {
-                    paragraph.style.display = "block"; // Exibe o parágrafo
-                } else {
-                    paragraph.style.display = "none"; // Oculta o parágrafo
-                }
-            }
+        function searchInIframe() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const content = document.getElementById('content').innerHTML;
+            const highlightedContent = content.replace(new RegExp(query, 'gi'), match => `<span class="highlight">${match}</span>`);
+            document.getElementById('content').innerHTML = highlightedContent;
         }
     </script>
-
 </body>
 </html>
