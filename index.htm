@@ -1,70 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barra de Busca no SharePoint</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            background-color: white;
-            border-radius: 25px;
-            padding: 10px 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-container input {
-            border: none;
-            outline: none;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 25px;
-            width: 300px;
-        }
-
-        .search-container button {
-            background-color: #0078d4;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            margin-left: 10px;
-            border-radius: 25px;
-            cursor: pointer;
-        }
-
-        .search-container button:hover {
-            background-color: #005a8d;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Busca na Página</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #searchInput {
+      margin-bottom: 20px;
+      padding: 10px;
+      width: 100%;
+      max-width: 400px;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Bem-vindo ao sistema de busca!</h1>
+  <input type="text" id="searchInput" placeholder="Digite o termo para buscar..." onkeyup="searchContent()">
+  
+  <div id="content">
+    <p class="searchable">Este é um exemplo de conteúdo que pode ser pesquisado. Tente encontrar palavras-chave aqui.</p>
+    <p class="searchable">Aqui está outro parágrafo com mais texto para testar a busca.</p>
+    <p class="searchable">Pesquise por 'conteúdo' ou 'texto'.</p>
+    <p class="searchable">Se você digitar 'teste', também vai encontrar algo.</p>
+  </div>
 
-    <div class="search-container">
-        <input type="text" id="search" placeholder="Pesquise no SharePoint..." />
-        <button onclick="search()">Buscar</button>
-    </div>
+  <div id="searchResults" class="result"></div>
 
-    <script>
-        function search() {
-            var query = document.getElementById("search").value;
-            if (query) {
-                // Modifique a URL abaixo para apontar para sua página de resultados de pesquisa no SharePoint
-                var searchURL = "https://oncoclinicas.sharepoint.com/sites/ocpm_medicos/SitePages/Portfolio.aspx?csf=1&web=1&e=bvgwov" + encodeURIComponent(query);
-                window.open(searchURL, "_blank");
-            }
+  <script>
+    function searchContent() {
+      var input = document.getElementById("searchInput");
+      var filter = input.value.toLowerCase();
+      var content = document.getElementById("content");
+      var paragraphs = content.getElementsByClassName("searchable");
+      var results = [];
+      
+      for (var i = 0; i < paragraphs.length; i++) {
+        var paragraph = paragraphs[i];
+        if (paragraph.textContent.toLowerCase().includes(filter)) {
+          results.push(paragraph.innerHTML);
         }
-    </script>
-
+      }
+      
+      // Exibe os resultados
+      var resultDiv = document.getElementById("searchResults");
+      resultDiv.innerHTML = results.length > 0 ? results.join('<br><br>') : "Nenhum resultado encontrado.";
+    }
+  </script>
 </body>
 </html>
