@@ -3,438 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pesquisador de Conteúdo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Teste de Busca</title>
   <style>
-    :root {
-      --primary: #0066cc;
-      --primary-hover: #0052a3;
-      --background: #ffffff;
-      --foreground: #333333;
-      --border: #e2e8f0;
-      --border-hover: #cbd5e1;
-      --highlight-bg: #e6f0ff;
-      --highlight-color: #0066cc;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
-      color: var(--foreground);
-      background: var(--background);
-      line-height: 1.6;
-      font-size: 16px;
-      padding: 1rem;
-    }
-    
-    .container {
+      font-family: Arial, sans-serif;
+      padding: 20px;
       max-width: 800px;
       margin: 0 auto;
     }
-    
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--primary);
+    .search-box {
+      margin-bottom: 20px;
     }
-    
-    .intro-text {
-      font-size: 0.875rem;
-      color: #666;
-      margin-bottom: 1.5rem;
+    input {
+      padding: 8px;
+      width: 300px;
     }
-    
-    .search-wrapper {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    
-    .search-container {
-      position: relative;
-      flex-grow: 1;
-    }
-    
-    .search-input {
-      width: 100%;
-      padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-      font-size: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      outline: none;
-      transition: all 0.2s ease;
-    }
-    
-    .search-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
-    }
-    
-    .search-icon {
-      position: absolute;
-      left: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #94a3b8;
-      pointer-events: none;
-    }
-    
-    .clear-button {
-      position: absolute;
-      right: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: #94a3b8;
-      display: none;
-    }
-    
-    .clear-button:hover {
-      color: #64748b;
-    }
-    
-    .search-button {
-      background-color: var(--primary);
+    button {
+      padding: 8px 16px;
+      background: #0066cc;
       color: white;
       border: none;
-      border-radius: 4px;
-      padding: 0 1.5rem;
-      font-weight: 500;
       cursor: pointer;
-      transition: background-color 0.2s ease;
     }
-    
-    .search-button:hover {
-      background-color: var(--primary-hover);
+    #results {
+      margin-top: 20px;
     }
-    
-    .textarea-container {
-      margin-bottom: 1.5rem;
+    .result {
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      background: #f5f5f5;
     }
-    
-    .textarea-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      font-size: 0.875rem;
-    }
-    
-    .content-textarea {
-      width: 100%;
-      height: 200px;
-      padding: 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      font-size: 0.875rem;
-      font-family: inherit;
-      resize: vertical;
-    }
-    
-    .content-textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
-    }
-    
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      font-size: 0.875rem;
-    }
-    
-    .results-container {
-      margin-top: 1.5rem;
-    }
-    
-    .result-card {
-      padding: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      margin-bottom: 0.75rem;
-      background-color: #f8fafc;
-      font-size: 0.875rem;
-      transition: all 0.2s ease;
-    }
-    
-    .result-card:hover {
-      border-color: var(--border-hover);
-    }
-    
     .highlight {
-      background-color: var(--highlight-bg);
-      color: var(--highlight-color);
-      padding: 0 2px;
-      border-radius: 2px;
-      font-weight: 500;
-    }
-    
-    .no-results {
-      padding: 2rem;
-      text-align: center;
-      color: #666;
-      border: 1px dashed var(--border);
-      border-radius: 4px;
-    }
-    
-    .help-text {
-      font-size: 0.75rem;
-      color: #666;
-      margin-top: 0.25rem;
-    }
-    
-    .spinner {
-      display: inline-block;
-      width: 1rem;
-      height: 1rem;
-      border: 2px solid rgba(0, 102, 204, 0.3);
-      border-radius: 50%;
-      border-top-color: var(--primary);
-      animation: spin 1s ease-in-out infinite;
-      margin-right: 0.5rem;
-      vertical-align: middle;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .footer {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.75rem;
-      color: #666;
+      background-color: yellow;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Pesquisador de Conteúdo</h1>
-      <p class="intro-text">Cole qualquer texto abaixo e encontre o que procura rapidamente.</p>
-    </header>
-    
-    <main>
-      <div class="textarea-container">
-        <label for="contentTextarea" class="textarea-label">Conteúdo para pesquisar:</label>
-        <textarea 
-          id="contentTextarea" 
-          class="content-textarea" 
-          placeholder="Cole aqui o conteúdo da página que deseja pesquisar..."
-        ></textarea>
-        <p class="help-text">
-          Dica: Para obter o conteúdo da página, selecione todo o texto (Ctrl+A), copie (Ctrl+C) e cole aqui (Ctrl+V).
-        </p>
-      </div>
-      
-      <div class="search-wrapper">
-        <div class="search-container">
-          <input 
-            type="text" 
-            id="searchInput" 
-            class="search-input" 
-            placeholder="Digite sua pesquisa aqui..." 
-            autocomplete="off"
-          >
-          <div class="search-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          <button id="clearButton" class="clear-button" aria-label="Limpar pesquisa">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        
-        <button id="searchButton" class="search-button">
-          Pesquisar
-        </button>
-      </div>
-      
-      <div id="statusBar" class="status-bar" style="display: none;">
-        <div id="searchStatus"></div>
-        <div id="resultsCount"></div>
-      </div>
-      
-      <div id="resultsContainer" class="results-container"></div>
-    </main>
-    
-    <footer class="footer">
-      Ferramenta de pesquisa para SharePoint - Desenvolvida para acesso sem privilégios administrativos
-    </footer>
+  <h2>Busca no Conteúdo</h2>
+  
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Digite o que procura...">
+    <button onclick="search()">Buscar</button>
   </div>
   
+  <div>
+    <h3>Texto de exemplo:</h3>
+    <div id="content">
+      <p>Este é um exemplo de texto dentro do iframe.</p>
+      <p>Outro parágrafo com mais texto para testar a busca.</p>
+      <p>Você pode adicionar mais conteúdo aqui para testar a funcionalidade de busca.</p>
+      <p>Patologia</p>
+      <p>Genômica Somático – Painel NGS em Tumores</p>
+      <p>Genômica Somático – Painel NGS em Biópsia líquida</p>
+      <p>ALK</p>
+      <p>BCL2</p>
+      <p>BCL6</p>
+      <p>Codeleção 1p19q</p>
+      <p>c-MYC</p>
+      <p>EWS</p>
+      <p>HER2</p>
+    </div>
+  </div>
+  
+  <div id="results"></div>
+  
   <script>
-    // Utility functions
-    function escapeRegExp(string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    }
-    
-    function highlightMatches(text, searchTerm) {
-      if (!searchTerm) return text;
+    function search() {
+      // Obter o texto de busca
+      var searchText = document.getElementById('searchInput').value.toLowerCase();
       
-      const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
-      return text.replace(regex, '<span class="highlight">$1</span>');
-    }
-    
-    function performSearch(content, searchTerm) {
-      if (!searchTerm.trim() || !content) {
-        return [];
-      }
-      
-      // Create a regex that matches the search term
-      const searchTermRegex = new RegExp(
-        `(\\S*${escapeRegExp(searchTerm)}\\S*|${escapeRegExp(searchTerm)})`, 
-        'gi'
-      );
-      
-      // Find all matches and their positions
-      const matchPositions = [];
-      let match;
-      
-      // Reset the regex's lastIndex property to start from the beginning
-      searchTermRegex.lastIndex = 0;
-      
-      while ((match = searchTermRegex.exec(content)) !== null) {
-        matchPositions.push(match.index);
-      }
-      
-      // Create context windows around matches
-      const matches = [];
-      
-      matchPositions.forEach(position => {
-        // Create a context window of text around the match
-        const startPosition = Math.max(0, position - 50);
-        const endPosition = Math.min(content.length, position + 100);
-        let contextText = content.substring(startPosition, endPosition);
-        
-        // Add ellipsis if the context is truncated
-        if (startPosition > 0) contextText = '...' + contextText;
-        if (endPosition < content.length) contextText = contextText + '...';
-        
-        // Add to results if not a duplicate (avoid nearby matches showing duplicate context)
-        if (!matches.some(m => Math.abs(m.position - position) < 60)) {
-          matches.push({
-            text: contextText,
-            position: position
-          });
-        }
-      });
-      
-      return matches;
-    }
-
-    // DOM elements
-    const searchInput = document.getElementById('searchInput');
-    const searchButton = document.getElementById('searchButton');
-    const clearButton = document.getElementById('clearButton');
-    const contentTextarea = document.getElementById('contentTextarea');
-    const statusBar = document.getElementById('statusBar');
-    const searchStatus = document.getElementById('searchStatus');
-    const resultsCount = document.getElementById('resultsCount');
-    const resultsContainer = document.getElementById('resultsContainer');
-    
-    // State variables
-    let isSearching = false;
-    
-    // Event listeners
-    searchInput.addEventListener('input', function() {
-      const value = this.value;
-      clearButton.style.display = value ? 'block' : 'none';
-    });
-    
-    clearButton.addEventListener('click', function() {
-      searchInput.value = '';
-      clearButton.style.display = 'none';
-      searchInput.focus();
-    });
-    
-    searchButton.addEventListener('click', function() {
-      doSearch();
-    });
-    
-    searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        doSearch();
-      }
-    });
-    
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-      // Focus content textarea on load
-      contentTextarea.focus();
-    });
-    
-    // Search function
-    function doSearch() {
-      const searchTerm = searchInput.value.trim();
-      const content = contentTextarea.value;
-      
-      if (!searchTerm) {
-        alert('Por favor, digite um termo para pesquisar.');
-        searchInput.focus();
+      if (!searchText) {
+        alert('Por favor, digite algo para buscar');
         return;
       }
       
-      if (!content) {
-        alert('Por favor, cole o conteúdo da página para pesquisar.');
-        contentTextarea.focus();
-        return;
+      // Obter o conteúdo para buscar
+      var content = document.getElementById('content');
+      var paragraphs = content.getElementsByTagName('p');
+      
+      // Limpar resultados anteriores
+      var resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      
+      // Contador de resultados
+      var count = 0;
+      
+      // Buscar em cada parágrafo
+      for (var i = 0; i < paragraphs.length; i++) {
+        var text = paragraphs[i].textContent.toLowerCase();
+        
+        if (text.includes(searchText)) {
+          count++;
+          
+          // Criar um elemento para mostrar o resultado
+          var resultElement = document.createElement('div');
+          resultElement.className = 'result';
+          
+          // Destacar o termo buscado
+          var originalText = paragraphs[i].textContent;
+          var highlightedText = originalText.replace(
+            new RegExp(searchText, 'gi'),
+            match => `<span class="highlight">${match}</span>`
+          );
+          
+          resultElement.innerHTML = highlightedText;
+          resultsDiv.appendChild(resultElement);
+        }
       }
       
-      // Show searching status
-      isSearching = true;
-      searchStatus.innerHTML = '<div class="spinner"></div> Pesquisando...';
-      statusBar.style.display = 'flex';
-      resultsCount.innerHTML = '';
-      
-      // Simulate small delay for better UX
-      setTimeout(() => {
-        try {
-          // Perform search
-          const results = performSearch(content, searchTerm);
-          
-          // Update status
-          isSearching = false;
-          resultsCount.innerHTML = `${results.length} resultado${results.length !== 1 ? 's' : ''} encontrado${results.length !== 1 ? 's' : ''}`;
-          searchStatus.innerHTML = '';
-          
-          // Show results
-          if (results.length === 0) {
-            resultsContainer.innerHTML = `
-              <div class="no-results">
-                Nenhum resultado encontrado para "${searchTerm}".
-              </div>
-            `;
-          } else {
-            resultsContainer.innerHTML = results.map((result, index) => `
-              <div class="result-card">
-                ${highlightMatches(result.text, searchTerm)}
-              </div>
-            `).join('');
-          }
-        } catch (error) {
-          console.error('Search error:', error);
-          isSearching = false;
-          searchStatus.innerHTML = 'Erro na pesquisa';
-          resultsContainer.innerHTML = `
-            <div class="no-results">
-              Ocorreu um erro ao realizar a pesquisa. Por favor, tente novamente.
-            </div>
-          `;
-        }
-      }, 300);
+      // Mostrar a contagem de resultados
+      if (count > 0) {
+        var countElement = document.createElement('p');
+        countElement.textContent = `${count} resultado(s) encontrado(s) para "${searchText}"`;
+        resultsDiv.prepend(countElement);
+      } else {
+        var noResultsElement = document.createElement('p');
+        noResultsElement.textContent = `Nenhum resultado encontrado para "${searchText}"`;
+        resultsDiv.appendChild(noResultsElement);
+      }
     }
   </script>
 </body>
