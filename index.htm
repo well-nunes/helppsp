@@ -1,157 +1,137 @@
-<div id="searchContainer" style="max-width: 800px; margin: 20px 0;">
-  <h2 style="font-size: 1.5rem; margin-bottom: 10px;">Busca no Conteúdo</h2>
-  
-  <div style="display: flex; margin-bottom: 15px;">
-    <div style="position: relative; flex-grow: 1;">
-      <input type="text" id="pageSearchInput" placeholder="Digite o que procura..." 
-        style="width: 100%; padding: 8px 8px 8px 32px; border: 1px solid #ccc; border-radius: 4px;">
-      <div style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%);">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-      </div>
-    </div>
-    <button id="pageSearchButton" 
-      style="margin-left: 8px; padding: 8px 16px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer;">
-      Buscar
-    </button>
-  </div>
-  
-  <div id="pageSearchStatus" style="font-size: 0.9rem; margin-bottom: 10px; display: none;"></div>
-  
-  <div id="pageSearchResults" style="border-top: 1px solid #eee; padding-top: 15px;"></div>
-</div>
-
 <script>
-  // Função para escapar caracteres especiais em expressões regulares
-  function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
+(function() {
+  // Criar elementos de UI
+  var container = document.createElement('div');
+  container.style.cssText = 'max-width:800px; margin:20px auto; font-family:Arial, sans-serif; border:1px solid #eee; padding:15px; border-radius:5px;';
   
-  // Função para destacar termos da busca no texto
-  function highlightMatches(text, searchTerm) {
-    if (!searchTerm) return text;
-    const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
-    return text.replace(regex, '<mark style="background-color: #ffffa0; padding: 0 2px;">$1</mark>');
-  }
+  var heading = document.createElement('h3');
+  heading.textContent = 'Busca no Conteúdo';
+  heading.style.cssText = 'margin-top:0; color:#333;';
   
-  // Função para realizar a busca no conteúdo da página
-  function performPageSearch(content, searchTerm) {
-    if (!searchTerm.trim() || !content) {
-      return [];
+  var searchBox = document.createElement('div');
+  searchBox.style.cssText = 'display:flex; margin:15px 0;';
+  
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = 'Digite o que procura...';
+  input.style.cssText = 'flex-grow:1; padding:8px; border:1px solid #ddd; border-radius:4px;';
+  
+  var button = document.createElement('button');
+  button.textContent = 'Buscar';
+  button.style.cssText = 'margin-left:8px; padding:8px 16px; background:#0078d4; color:white; border:none; border-radius:4px; cursor:pointer;';
+  
+  var statusDiv = document.createElement('div');
+  statusDiv.style.cssText = 'margin:10px 0; font-size:14px; display:none;';
+  
+  var resultsDiv = document.createElement('div');
+  resultsDiv.style.cssText = 'margin-top:15px;';
+  
+  // Montar a estrutura
+  searchBox.appendChild(input);
+  searchBox.appendChild(button);
+  
+  container.appendChild(heading);
+  container.appendChild(searchBox);
+  container.appendChild(statusDiv);
+  container.appendChild(resultsDiv);
+  
+  // Adicionar ao DOM
+  document.currentScript.parentNode.insertBefore(container, document.currentScript);
+  
+  // Função de busca
+  function doSearch() {
+    var term = input.value.trim();
+    
+    if (!term) {
+      alert('Por favor, digite um termo para pesquisar.');
+      input.focus();
+      return;
     }
     
-    // Criar regex para encontrar o termo de busca
-    const searchTermRegex = new RegExp(`(\\S*${escapeRegExp(searchTerm)}\\S*|${escapeRegExp(searchTerm)})`, 'gi');
+    // Status
+    statusDiv.textContent = 'Pesquisando...';
+    statusDiv.style.display = 'block';
     
-    // Posições de todas as ocorrências
-    const matchPositions = [];
-    let match;
+    // Obter conteúdo da página
+    var content = document.body.textContent || '';
     
-    // Reiniciar o índice da regex
-    searchTermRegex.lastIndex = 0;
-    
-    // Encontrar todas as ocorrências
-    while ((match = searchTermRegex.exec(content)) !== null) {
-      matchPositions.push(match.index);
+    // Escapar regex
+    function escapeRegex(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
     
-    // Criar contextos em torno das ocorrências
-    const matches = [];
-    
-    matchPositions.forEach(position => {
-      // Criar uma janela de contexto em torno da ocorrência
-      const startPosition = Math.max(0, position - 50);
-      const endPosition = Math.min(content.length, position + 100);
-      let contextText = content.substring(startPosition, endPosition);
+    try {
+      // Criar regex
+      var regex = new RegExp(escapeRegex(term), 'gi');
       
-      // Adicionar reticências se o contexto for truncado
-      if (startPosition > 0) contextText = '...' + contextText;
-      if (endPosition < content.length) contextText = contextText + '...';
+      // Encontrar ocorrências
+      var matches = [];
+      var match;
+      var contexts = [];
       
-      // Adicionar aos resultados se não for duplicado
-      if (!matches.some(m => Math.abs(m.position - position) < 60)) {
-        matches.push({
-          text: contextText,
-          position: position
+      while ((match = regex.exec(content)) !== null) {
+        var start = Math.max(0, match.index - 40);
+        var end = Math.min(content.length, match.index + term.length + 60);
+        var context = content.substring(start, end);
+        
+        // Adicionar elipses
+        if (start > 0) context = '...' + context;
+        if (end < content.length) context += '...';
+        
+        // Verificar se já temos um contexto similar
+        var isDuplicate = contexts.some(function(ctx) {
+          return ctx.indexOf(match[0]) !== -1 && 
+                Math.abs(ctx.length - context.length) < 30;
         });
-      }
-    });
-    
-    return matches;
-  }
-
-  // Configurar o comportamento de busca quando o documento estiver pronto
-  document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('pageSearchInput');
-    const searchButton = document.getElementById('pageSearchButton');
-    const searchStatus = document.getElementById('pageSearchStatus');
-    const resultsContainer = document.getElementById('pageSearchResults');
-    
-    // Função para executar a busca
-    function doPageSearch() {
-      const searchTerm = searchInput.value.trim();
-      
-      if (!searchTerm) {
-        alert('Por favor, digite um termo para pesquisar.');
-        searchInput.focus();
-        return;
-      }
-      
-      // Obter o conteúdo da página atual (não do iframe, mas da página SharePoint)
-      const pageContent = document.body.textContent || '';
-      
-      // Mostrar status de busca
-      searchStatus.innerHTML = 'Pesquisando...';
-      searchStatus.style.display = 'block';
-      
-      // Simular pequeno atraso para melhor experiência
-      setTimeout(() => {
-        try {
-          // Realizar a busca
-          const results = performPageSearch(pageContent, searchTerm);
-          
-          // Atualizar status
-          searchStatus.innerHTML = `${results.length} resultado${results.length !== 1 ? 's' : ''} encontrado${results.length !== 1 ? 's' : ''}`;
-          
-          // Mostrar resultados
-          if (results.length === 0) {
-            resultsContainer.innerHTML = `
-              <div style="padding: 20px; text-align: center; color: #666; border: 1px solid #eee; border-radius: 4px;">
-                Nenhum resultado encontrado para "${searchTerm}".
-              </div>
-            `;
-          } else {
-            resultsContainer.innerHTML = results.map(result => `
-              <div style="padding: 12px; margin-bottom: 10px; background-color: #f9f9f9; border-radius: 4px; border: 1px solid #eee;">
-                ${highlightMatches(result.text, searchTerm)}
-              </div>
-            `).join('');
-          }
-        } catch (error) {
-          console.error('Erro na busca:', error);
-          searchStatus.innerHTML = 'Erro na pesquisa';
-          resultsContainer.innerHTML = `
-            <div style="padding: 20px; text-align: center; color: #c00; border: 1px solid #fcc; border-radius: 4px; background-color: #fff6f6;">
-              Ocorreu um erro ao realizar a pesquisa. Por favor, tente novamente.
-            </div>
-          `;
+        
+        if (!isDuplicate) {
+          contexts.push(context);
+          matches.push({
+            text: context,
+            position: match.index
+          });
         }
-      }, 300);
-    }
-    
-    // Adicionar evento de clique ao botão
-    searchButton.addEventListener('click', doPageSearch);
-    
-    // Adicionar evento de tecla Enter no campo de busca
-    searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        doPageSearch();
       }
-    });
-    
-    // Focar no campo de busca ao carregar
-    searchInput.focus();
+      
+      // Mostrar resultados
+      statusDiv.textContent = matches.length + ' resultado(s) encontrado(s)';
+      
+      if (matches.length === 0) {
+        resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:#666; border:1px solid #eee;">Nenhum resultado encontrado para "' + term + '"</div>';
+      } else {
+        var html = '';
+        
+        for (var i = 0; i < matches.length; i++) {
+          var highlightedText = matches[i].text.replace(
+            new RegExp('(' + escapeRegex(term) + ')', 'gi'),
+            '<span style="background-color:#ffffa0; font-weight:bold;">$1</span>'
+          );
+          
+          html += '<div style="padding:10px; margin-bottom:10px; border:1px solid #eee; background:#f9f9f9;">' +
+                  highlightedText + '</div>';
+        }
+        
+        resultsDiv.innerHTML = html;
+      }
+    } catch (error) {
+      statusDiv.textContent = 'Erro na pesquisa';
+      resultsDiv.innerHTML = '<div style="padding:15px; text-align:center; color:#c00; border:1px solid #fcc; background:#fff6f6;">Ocorreu um erro ao realizar a pesquisa.</div>';
+      console.error('Erro na busca:', error);
+    }
+  }
+  
+  // Adicionar eventos
+  button.addEventListener('click', doSearch);
+  
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      doSearch();
+    }
   });
+  
+  // Focar no input
+  setTimeout(function() {
+    input.focus();
+  }, 100);
+})();
 </script>
