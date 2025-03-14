@@ -15,43 +15,18 @@
       max-width: 400px;
       font-size: 16px;
     }
-    .result {
-      margin-top: 20px;
+    .searchable {
+      display: none; /* Oculta os parágrafos inicialmente */
+    }
+    .visible {
+      display: block; /* Exibe os parágrafos que correspondem ao filtro */
     }
   </style>
 </head>
 <body>
-  <h1>Bem-vindo ao sistema de busca!</h1>
+  <h1>Busca na Página</h1>
   <input type="text" id="searchInput" placeholder="Digite o termo para buscar..." onkeyup="searchContent()">
   
   <div id="content">
     <p class="searchable">Este é um exemplo de conteúdo que pode ser pesquisado. Tente encontrar palavras-chave aqui.</p>
-    <p class="searchable">Aqui está outro parágrafo com mais texto para testar a busca.</p>
-    <p class="searchable">Pesquise por 'conteúdo' ou 'texto'.</p>
-    <p class="searchable">Se você digitar 'teste', também vai encontrar algo.</p>
-  </div>
-
-  <div id="searchResults" class="result"></div>
-
-  <script>
-    function searchContent() {
-      var input = document.getElementById("searchInput");
-      var filter = input.value.toLowerCase();
-      var content = document.getElementById("content");
-      var paragraphs = content.getElementsByClassName("searchable");
-      var results = [];
-      
-      for (var i = 0; i < paragraphs.length; i++) {
-        var paragraph = paragraphs[i];
-        if (paragraph.textContent.toLowerCase().includes(filter)) {
-          results.push(paragraph.innerHTML);
-        }
-      }
-      
-      // Exibe os resultados
-      var resultDiv = document.getElementById("searchResults");
-      resultDiv.innerHTML = results.length > 0 ? results.join('<br><br>') : "Nenhum resultado encontrado.";
-    }
-  </script>
-</body>
-</html>
+    <p class="searchable">Aqui está outro parágrafo com mais texto para testar a b
