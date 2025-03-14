@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busca Dinâmica</title>
+    <title>Busca Dinâmica no SharePoint</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,28 +28,4 @@
     <input type="text" id="searchInput" placeholder="Digite para buscar..." onkeyup="searchContent()">
 
     <div id="content">
-        <p class="searchable">Este é um exemplo de conteúdo para ser buscado. Teste palavras-chave como "conteúdo".</p>
-        <p class="searchable">Aqui outro texto de exemplo. Tente buscar por "exemplo".</p>
-        <p class="searchable">Digite "teste" para ver mais resultados.</p>
-        <p class="searchable">Este texto aparece se você digitar "conteúdo".</p>
-    </div>
-
-    <script>
-        function searchContent() {
-            var input = document.getElementById("searchInput").value.toLowerCase(); // Obtém o valor da pesquisa
-            var paragraphs = document.getElementsByClassName("searchable");
-
-            // Itera por cada parágrafo e verifica se contém o termo de busca
-            for (var i = 0; i < paragraphs.length; i++) {
-                var paragraph = paragraphs[i];
-                if (paragraph.textContent.toLowerCase().includes(input)) {
-                    paragraph.style.display = "block"; // Exibe o parágrafo
-                } else {
-                    paragraph.style.display = "none"; // Oculta o parágrafo
-                }
-            }
-        }
-    </script>
-
-</body>
-</html>
+        <p class="searchable">Este é um exemplo de conteúdo
