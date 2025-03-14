@@ -1,56 +1,55 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Busca na Página</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    #searchInput {
-      margin-bottom: 20px;
-      padding: 10px;
-      width: 100%;
-      max-width: 400px;
-      font-size: 16px;
-    }
-    .searchable {
-      margin-bottom: 10px;
-      display: block; /* Todos os parágrafos serão visíveis inicialmente */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca Dinâmica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #searchInput {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+        .searchable {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-  <h1>Busca na Página</h1>
-  <input type="text" id="searchInput" placeholder="Digite o termo para buscar..." onkeyup="searchContent()">
-  
-  <div id="content">
-    <p class="searchable">Este é um exemplo de conteúdo que pode ser pesquisado. Tente encontrar palavras-chave aqui.</p>
-    <p class="searchable">Aqui está outro parágrafo com mais texto para testar a busca.</p>
-    <p class="searchable">Pesquise por 'conteúdo' ou 'texto'.</p>
-    <p class="searchable">Se você digitar 'teste', também vai encontrar algo.</p>
-  </div>
 
-  <script>
-    function searchContent() {
-      var input = document.getElementById("searchInput");
-      var filter = input.value.toLowerCase();  // Obtém o valor digitado na busca
-      var paragraphs = document.getElementsByClassName("searchable");
-      
-      // Loop para verificar cada parágrafo
-      for (var i = 0; i < paragraphs.length; i++) {
-        var paragraph = paragraphs[i];
-        
-        // Se o parágrafo contém o texto da busca, exibe, caso contrário, oculta
-        if (paragraph.textContent.toLowerCase().includes(filter)) {
-          paragraph.style.display = "block";  // Exibe o parágrafo
-        } else {
-          paragraph.style.display = "none";   // Oculta o parágrafo
+    <h1>Busque Conteúdo na Página</h1>
+    <input type="text" id="searchInput" placeholder="Digite para buscar..." onkeyup="searchContent()">
+
+    <div id="content">
+        <p class="searchable">Este é um exemplo de conteúdo para ser buscado. Teste palavras-chave como "conteúdo".</p>
+        <p class="searchable">Aqui outro texto de exemplo. Tente buscar por "exemplo".</p>
+        <p class="searchable">Digite "teste" para ver mais resultados.</p>
+        <p class="searchable">Este texto aparece se você digitar "conteúdo".</p>
+    </div>
+
+    <script>
+        function searchContent() {
+            var input = document.getElementById("searchInput").value.toLowerCase(); // Obtém o valor da pesquisa
+            var paragraphs = document.getElementsByClassName("searchable");
+
+            // Itera por cada parágrafo e verifica se contém o termo de busca
+            for (var i = 0; i < paragraphs.length; i++) {
+                var paragraph = paragraphs[i];
+                if (paragraph.textContent.toLowerCase().includes(input)) {
+                    paragraph.style.display = "block"; // Exibe o parágrafo
+                } else {
+                    paragraph.style.display = "none"; // Oculta o parágrafo
+                }
+            }
         }
-      }
-    }
-  </script>
+    </script>
+
 </body>
 </html>
