@@ -3,35 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busca no SharePoint</title>
+    <title>Barra de Busca no SharePoint</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 25px;
+            padding: 10px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container input {
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 25px;
+            width: 300px;
+        }
+
+        .search-container button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-left: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .search-container button:hover {
+            background-color: #005a8d;
+        }
+    </style>
 </head>
 <body>
-    <input type="text" id="searchBox" placeholder="Buscar...">
-    <button onclick="searchSPList()">Buscar</button>
-    <ul id="searchResults"></ul>
+
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Pesquise no SharePoint..." />
+        <button onclick="search()">Buscar</button>
+    </div>
 
     <script>
-        function searchSPList() {
-            var query = document.getElementById("searchBox").value;
-            var siteUrl = "https://seu-sharepoint.sharepoint.com";
-            var listName = "Documentos"; 
-
-            fetch(siteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items?$filter=substringof('" + query + "', Title)", {
-                method: "GET",
-                headers: { "Accept": "application/json; odata=verbose" }
-            })
-            .then(response => response.json())
-            .then(data => {
-                var results = document.getElementById("searchResults");
-                results.innerHTML = "";
-                data.d.results.forEach(item => {
-                    var li = document.createElement("li");
-                    li.textContent = item.Title;
-                    results.appendChild(li);
-                });
-            })
-            .catch(error => console.error("Erro na busca:", error));
+        function search() {
+            var query = document.getElementById("search").value;
+            if (query) {
+                // Modifique a URL abaixo para apontar para sua página de resultados de pesquisa no SharePoint
+                var searchURL = "https://oncoclinicas.sharepoint.com/sites/ocpm_medicos/SitePages/Portfolio.aspx?csf=1&web=1&e=bvgwov" + encodeURIComponent(query);
+                window.open(searchURL, "_blank");
+            }
         }
     </script>
+
 </body>
 </html>
